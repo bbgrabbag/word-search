@@ -1,4 +1,4 @@
-const { traverser, createMatcher, wordSearch } = require("./main.js");
+const { traverser, wordSearch } = require("./main.js");
 const grids = require("./test-cases/grids.json");
 
 describe("Word Search", () => {
@@ -57,15 +57,6 @@ describe("Word Search", () => {
       expect(traverse("negative", 0, 4)).toEqual(["", ""]);
       expect(traverse("negative", 4, 0)).toEqual(["", ""]);
       expect(traverse("negative", 4, 4)).toEqual(["", ""]);
-    });
-  });
-
-  describe("Word Matcher", () => {
-    it("Should match words based on regex generated from raw word", () => {
-      const matcher = createMatcher("test");
-      expect(matcher.test("xxxtestxxx")).toBe(true);
-      expect(matcher.test("xxxtesstxxx")).toBe(false);
-      expect(matcher.test("xxxtestxtestxx")).toBe(true);
     });
   });
 

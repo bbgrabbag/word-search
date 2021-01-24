@@ -37,7 +37,6 @@ const traverser = (searchSpace) => (type = "row", row = 0, col = 0) => {
   return [forward, reverse];
 };
 
-const createMatcher = (w) => new RegExp(w);
 
 const wordSearch = (searchSpace) => (wordList) => {
   const foundWords = new Set();
@@ -45,7 +44,6 @@ const wordSearch = (searchSpace) => (wordList) => {
   if (searchSpace.length !== searchSpace[0].length)
     throw "Invalid grid dimensions. Search space must be size N x N";
 
-  const matchers = wordList.map(createMatcher);
   const traverse = traverser(searchSpace);
   const last = searchSpace.length - 1;
 
@@ -67,8 +65,8 @@ const wordSearch = (searchSpace) => (wordList) => {
     );
   }
 
-  matchers.forEach((m, i) =>
-    candidates.some((c) => m.test(c) && foundWords.add(wordList[i]))
+  wordList.forEach((w, i) =>
+    candidates.some((c) => new RegExp(w).test(c) && foundWords.add(wordList[i]))
   );
 
   return Array.from(foundWords);
@@ -76,6 +74,5 @@ const wordSearch = (searchSpace) => (wordList) => {
 
 module.exports = {
   wordSearch,
-  createMatcher,
   traverser,
 };
