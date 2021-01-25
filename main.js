@@ -55,23 +55,18 @@ const wordSearch = (searchSpace) => (wordList) => {
   const traverse = traverser(searchSpace);
   const last = searchSpace.length - 1;
 
-  const candidates = [];
-
   for (let i = 0; i < searchSpace.length; i++) {
-    candidates.push(
+    [
       ...traverse("row", i),
       ...traverse("column", 0, i),
       ...traverse("negative", 0, i),
       ...traverse("negative", i),
       ...traverse("positive", last, i),
-      ...traverse("positive", i)
+      ...traverse("positive", i),
+    ].forEach((f) =>
+      wordList.forEach((w) => new RegExp(w).test(f) && foundWords.add(w))
     );
   }
-
-  wordList.forEach((w, i) =>
-    candidates.some((c) => new RegExp(w).test(c) && foundWords.add(wordList[i]))
-  );
-
   return Array.from(foundWords);
 };
 
