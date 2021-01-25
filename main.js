@@ -1,9 +1,17 @@
+/**
+ * @description Return closure produces an array containing the forward/reverse versions of the column/row/diagonal specified from starting point (row, col)
+ * @param {string[]} searchSpace
+ * @returns {Function}
+ */
 const traverser = (searchSpace) => (type = "row", row = 0, col = 0) => {
   let forward = "";
   let reverse = "";
   let rowIncrementer;
   let colIncrementer;
 
+  /**
+   * 'type' parameter represents slope/direction of line coming off starting coordinates (row/col). For example, 'positive' tracks the diagonal up-right vector, while 'negative' tracks the down-right vector. There is no need to explicitly define a 'reverse' diagonal vector because they are simply reflections of a positive or negative vector.
+   */
   switch (type) {
     case "column":
       rowIncrementer = (r) => r + 1;
@@ -30,13 +38,13 @@ const traverser = (searchSpace) => (type = "row", row = 0, col = 0) => {
     limiter(r, c);
     r = rowIncrementer(r), c = colIncrementer(c)
   ) {
+    // optimize by generating forward and reverse version of the vector in one iteration
     forward += searchSpace[r][c];
     reverse = searchSpace[r][c] + reverse;
   }
 
   return [forward, reverse];
 };
-
 
 const wordSearch = (searchSpace) => (wordList) => {
   const foundWords = new Set();
@@ -49,19 +57,14 @@ const wordSearch = (searchSpace) => (wordList) => {
 
   const candidates = [];
 
-  for (let c = 0; c < searchSpace.length; c++) {
+  for (let i = 0; i < searchSpace.length; i++) {
     candidates.push(
-      ...traverse("column", 0, c),
-      ...traverse("negative", 0, c),
-      ...traverse("positive", last, c)
-    );
-  }
-
-  for (let r = 0; r < searchSpace.length; r++) {
-    candidates.push(
-      ...traverse("row", r),
-      ...traverse("negative", r),
-      ...traverse("positive", r)
+      ...traverse("row", i),
+      ...traverse("column", 0, i),
+      ...traverse("negative", 0, i),
+      ...traverse("negative", i),
+      ...traverse("positive", last, i),
+      ...traverse("positive", i)
     );
   }
 
